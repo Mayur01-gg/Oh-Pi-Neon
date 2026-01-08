@@ -1,43 +1,46 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from services.language_service import analyze_text
-import matplotlib.pyplot as plt
-import os
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+# ---------------- UI ROUTE ----------------
+@app.route("/", methods=["GET"])
 def index():
-    result = None
-    chart_path = None
+    return render_template("index.html")
 
-    if request.method == "POST":
-        text = request.form["text"]
-        result = analyze_text(text)
+# ---------------- API ROUTE ----------------
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    data = request.get_json(silent=True)
 
-        # Sentiment confidence bar chart
-        scores = result["confidence_scores"]
-        labels = ["Positive", "Neutral", "Negative"]
-        values = [
-            scores.positive,
-            scores.neutral,
-            scores.negative
-        ]
+    if not data or "text" not in data:
+        return jsonify({"error": "No text provided"}), 400
 
-        plt.figure()
-        plt.bar(labels, values)
-        plt.title("Sentiment Confidence Scores")
-        plt.ylabel("Score")
+    text = data["text"]
 
-        chart_path = "static/sentiment_chart.png"
-        plt.savefig(chart_path)
-        plt.close()
+    result = analyze_text(text)
 
-    return render_template(
-        "index.html",
-        result=result,
-        chart_path=chart_path
-    )
+    # Ensure JSON-safe structure
+    response = {
+        "sentiment": result["sentiment"],
+        "confidence_scores": {
+            "positive": result["confidence_scores"].positive,
+            "neutral": result["confidence_scores"].neutral,
+            "negative": result["confidence_scores"].negative
+        },
+        "key_phrases": result.get("key_phrases", [])
+    }
 
+    return jsonify(response)
+
+# ---------------- ERROR SAFETY ----------------
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify(error="Route not found"), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify(error="Internal server error"), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
