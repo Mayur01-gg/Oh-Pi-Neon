@@ -1,0 +1,22 @@
+
+# Virtual Environment
+venv/
+
+# Environment Variables (Azure keys)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Flask generated files
+instance/
+
+# Generated charts / artifacts
+static/sentiment_chart.png
+
+# OS / Editor noise
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

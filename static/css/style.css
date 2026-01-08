@@ -1,0 +1,142 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f6f9;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Form */
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-size: 14px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #5b6cff;
+}
+
+button {
+    margin-top: 15px;
+    background: #5b6cff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #4a5af0;
+}
+
+/* Results */
+.results {
+    display: grid;
+    gap: 20px;
+}
+
+.result-card {
+    text-align: center;
+}
+
+.sentiment {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Sentiment Colors */
+.sentiment.positive {
+    background: #e6f9f0;
+    color: #1e8e5a;
+}
+
+.sentiment.negative {
+    background: #fdeaea;
+    color: #c0392b;
+}
+
+.sentiment.neutral {
+    background: #f1f3f5;
+    color: #555;
+}
+
+/* Key Phrases */
+.phrases {
+    list-style: none;
+    padding: 0;
+}
+
+.phrases li {
+    background: #f1f3f5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* Chart */
+img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: #888;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oh-Pi-Neon | Opinion Intelligence</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<div class="page">
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Oh-Pi-Neon</h1>
+        <p>Opinion Intelligence & Sentiment Analysis (Azure)</p>
+    </header>
+
+    <!-- Main Area -->
+    <div class="{% if result %}dashboard{% else %}centered{% endif %}">
+
+        <!-- INPUT PANEL -->
+        <div class="card input-card">
+            <form method="POST">
+                <label>Enter Text</label>
+                <textarea
+                    name="text"
+                    placeholder="Paste customer review, feedback, or tweet..."
+                    required>{{ request.form.text if request.form.text }}</textarea>
+
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+
+        <!-- RESULTS PANEL -->
+        {% if result %}
+        <div class="results">
+
+            <div class="card sentiment-card">
+                <h3>Overall Sentiment</h3>
+                <span class="sentiment {{ result.sentiment }}">
+                    {{ result.sentiment | capitalize }}
+                </span>
+            </div>
+
+            <div class="card">
+                <h3>Key Phrases</h3>
+                <div class="phrases">
+                    {% for phrase in result.key_phrases %}
+                        <span>{{ phrase }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Sentiment Distribution</h3>
+                <img src="{{ chart_path }}" alt="Sentiment Chart">
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+
+    <footer class="footer">
+        Powered by Azure AI Language • Flask
+    </footer>
+
+</div>
+</body>
+</html>
