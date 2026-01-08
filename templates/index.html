@@ -2,70 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Oh-Pi-Neon | Opinion Intelligence</title>
-    <link rel="stylesheet" href="/static/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oh-Pi-Nion - Opinion Intelligence Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-<div class="page">
-
-    <!-- Header -->
-    <header class="header">
-        <h1>Oh-Pi-Neon</h1>
-        <p>Opinion Intelligence & Sentiment Analysis (Azure)</p>
-    </header>
-
-    <!-- Main Area -->
-    <div class="{% if result %}dashboard{% else %}centered{% endif %}">
-
-        <!-- INPUT PANEL -->
-        <div class="card input-card">
-            <form method="POST">
-                <label>Enter Text</label>
-                <textarea
-                    name="text"
-                    placeholder="Paste customer review, feedback, or tweet..."
-                    required>{{ request.form.text if request.form.text }}</textarea>
-
-                <button type="submit">Analyze</button>
-            </form>
-        </div>
-
-        <!-- RESULTS PANEL -->
-        {% if result %}
-        <div class="results">
-
-            <div class="card sentiment-card">
-                <h3>Overall Sentiment</h3>
-                <span class="sentiment {{ result.sentiment }}">
-                    {{ result.sentiment | capitalize }}
-                </span>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-section">
+                <h1 class="logo">Oh-Pi-Nion</h1>
+                <p class="tagline">Opinion Intelligence & Sentiment Analysis Platform</p>
             </div>
+            <div class="powered-by">
+                <span>Powered by Microsoft Azure AI</span>
+            </div>
+        </header>
 
-            <div class="card">
-                <h3>Key Phrases</h3>
-                <div class="phrases">
-                    {% for phrase in result.key_phrases %}
-                        <span>{{ phrase }}</span>
-                    {% endfor %}
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section">
+                <h2>Analyze Your Text</h2>
+                <form id="analysisForm">
+                    <textarea 
+                        id="textInput" 
+                        name="text" 
+                        placeholder="Enter customer reviews, feedback, tweets, or any text for sentiment analysis..."
+                        rows="8"
+                        required
+                    ></textarea>
+                    <button type="submit" class="btn-analyze" id="analyzeBtn">
+                        <span class="btn-text">Analyze Sentiment</span>
+                        <span class="btn-loader" style="display: none;">Analyzing...</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h2>Analysis Results</h2>
+                
+                <!-- Overall Sentiment -->
+                <div class="result-card sentiment-card">
+                    <h3>Overall Sentiment</h3>
+                    <div class="sentiment-badge" id="sentimentBadge">
+                        <span id="sentimentLabel">-</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <h3>Sentiment Distribution</h3>
-                <img src="{{ chart_path }}" alt="Sentiment Chart">
-            </div>
+                <!-- Sentiment Distribution -->
+                <div class="result-card distribution-card">
+                    <h3>Sentiment Confidence Distribution</h3>
+                    <div class="chart-container">
+                        <div class="bar-chart" id="barChart"></div>
+                    </div>
+                </div>
 
-        </div>
-        {% endif %}
+                <!-- Key Phrases -->
+                <div class="result-card keyphrases-card">
+                    <h3>Key Phrases</h3>
+                    <div class="keyphrases-container" id="keyphrasesContainer">
+                        <!-- Key phrases will be inserted here -->
+                    </div>
+                </div>
 
+                <!-- Sentiment Scores -->
+                <div class="result-card scores-card">
+                    <h3>Detailed Scores</h3>
+                    <div class="scores-grid">
+                        <div class="score-item positive">
+                            <span class="score-label">Positive</span>
+                            <span class="score-value" id="positiveScore">0%</span>
+                        </div>
+                        <div class="score-item neutral">
+                            <span class="score-label">Neutral</span>
+                            <span class="score-value" id="neutralScore">0%</span>
+                        </div>
+                        <div class="score-item negative">
+                            <span class="score-label">Negative</span>
+                            <span class="score-value" id="negativeScore">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-message">
+                    <span class="error-icon">⚠️</span>
+                    <p id="errorText"></p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Created by Mayur Chalke | AI & Data Science | Cloud & Python Developer</p>
+            <p class="footer-note">Powered by Azure AI Language Services</p>
+        </footer>
     </div>
 
-    <footer class="footer">
-        Powered by Azure AI Language • Flask
-    </footer>
-
-</div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
