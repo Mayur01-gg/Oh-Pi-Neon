@@ -21,7 +21,6 @@ The project leverages **Microsoft Azure AI Language (Text Analytics)** services 
 * Convert **unstructured text** into meaningful insights
 * Perform **sentiment analysis** (positive / neutral / negative)
 * Extract **key phrases** for opinion summarization
-* Present results visually in a **single-screen dashboard**
 * Demonstrate practical usage of **Azure Cognitive Services**
 
 ---
@@ -45,7 +44,6 @@ The project leverages **Microsoft Azure AI Language (Text Analytics)** services 
 * 🖥️ **Modern Dashboard UI**
 
   * Clean, responsive, and user-friendly
-  * Input and results displayed on a single screen
 
 * ☁️ **Azure-Powered AI**
 
@@ -152,11 +150,11 @@ http://127.0.0.1:5000
 
 ## 📄 Deliverables (As per Project Specification)
 
-* ✔ Flask-based web application
-* ✔ Azure AI Language integration
-* ✔ Sentiment & key-phrase extraction
-* ✔ Visualization of sentiment distribution
-* ✔ User-friendly dashboard UI
+✔ Flask-based web application
+✔ Azure AI Language integration
+✔ Sentiment & key-phrase extraction
+✔ Visualization of sentiment distribution
+✔ User-friendly dashboard UI
 
 ---
 
