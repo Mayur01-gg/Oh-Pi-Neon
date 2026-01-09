@@ -150,11 +150,11 @@ http://127.0.0.1:5000
 
 ## 📄 Deliverables (As per Project Specification)
 
-✔ Flask-based web application
-✔ Azure AI Language integration
-✔ Sentiment & key-phrase extraction
-✔ Visualization of sentiment distribution
-✔ User-friendly dashboard UI
+✔ Flask-based web application  
+✔ Azure AI Language integration  
+✔ Sentiment & key-phrase extraction  
+✔ Visualization of sentiment distribution  
+✔ User-friendly dashboard UI  
 
 ---
 
