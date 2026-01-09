@@ -1,7 +1,6 @@
 # Oh-Pi-Neon
 
-## Opinion Intelligence & Sentiment Analysis Platform
-**(Microsoft Azure AI Language + Flask)**
+**Opinion Intelligence & Sentiment Analysis Platform (Microsoft Azure AI Language + Flask)**
 
 ---
 
