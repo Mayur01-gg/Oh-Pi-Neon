@@ -17,127 +17,133 @@ const neutralScore = document.getElementById("neutralScore");
 const negativeScore = document.getElementById("negativeScore");
 const errorText = document.getElementById("errorText");
 
-// Form submission handler
+// Character counter
+const charCount = document.getElementById("charCount");
+const MAX_CHARS = 5000;
+
+// 🔹 NEW: Language elements
+const languageText = document.getElementById("languageText");
+
+// Form submission
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const text = textInput.value.trim();
+  if (text.length > MAX_CHARS) {
+    showError("Text exceeds maximum allowed length (5000 characters).");
+    setLoadingState(false);
+    return;
+  }
 
   if (!text) {
     showError("Please enter some text to analyze.");
     return;
   }
 
-  // Show loading state
   setLoadingState(true);
   hideError();
   hideResults();
 
   try {
-    // Send request to Flask backend
     const response = await fetch("/analyze", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: text }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
     });
 
     const data = await response.json();
-
     if (!response.ok) {
       throw new Error(data.error || "Analysis failed");
     }
 
-    // Display results
     displayResults(data);
-  } catch (error) {
-    console.error("Error:", error);
-    showError(
-      error.message || "An error occurred during analysis. Please try again."
-    );
+  } catch (err) {
+    console.error(err);
+    showError("An error occurred during analysis. Please try again.");
   } finally {
     setLoadingState(false);
   }
 });
 
-// Set loading state
+// UI Helpers
 function setLoadingState(isLoading) {
-  if (isLoading) {
-    analyzeBtn.disabled = true;
-    btnText.style.display = "none";
-    btnLoader.style.display = "inline";
-  } else {
-    analyzeBtn.disabled = false;
-    btnText.style.display = "inline";
-    btnLoader.style.display = "none";
-  }
+  analyzeBtn.disabled = isLoading;
+  btnText.style.display = isLoading ? "none" : "inline";
+  btnLoader.style.display = isLoading ? "inline" : "none";
 }
 
-// Display analysis results
+function hideResults() {
+  resultsSection.style.display = "none";
+}
+
+function hideError() {
+  errorSection.style.display = "none";
+}
+
+function showError(message) {
+  errorText.textContent = message;
+  errorSection.style.display = "block";
+  resultsSection.style.display = "none";
+}
+
+// Display Results
 function displayResults(data) {
   hideError();
 
-  // Set overall sentiment
+  // Sentiment badge
   const sentiment = data.sentiment.toLowerCase();
-  sentimentLabel.textContent = sentiment;
   sentimentBadge.className = `sentiment-badge ${sentiment}`;
+  sentimentLabel.textContent = sentiment.toUpperCase();
 
-  // Display sentiment scores
+  // 🔹 NEW: Display detected language (SAFE ADDITION)
+  if (data.language && languageText) {
+    languageText.textContent = `${data.language.name.toUpperCase()} • ${
+      data.language.code
+    }`;
+  }
+
+  // Scores
   const scores = data.confidence_scores;
   positiveScore.textContent = `${(scores.positive * 100).toFixed(1)}%`;
   neutralScore.textContent = `${(scores.neutral * 100).toFixed(1)}%`;
   negativeScore.textContent = `${(scores.negative * 100).toFixed(1)}%`;
 
-  // Create bar chart
+  // Bars + key phrases
   createBarChart(scores);
-
-  // Display key phrases
   displayKeyPhrases(data.key_phrases);
 
-  // Show results section with animation
   resultsSection.style.display = "block";
-  resultsSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-// Create sentiment distribution bar chart
+// Sentiment Confidence Bars
 function createBarChart(scores) {
   barChart.innerHTML = "";
 
-  const sentiments = [
-    { name: "positive", value: scores.positive, color: "positive" },
-    { name: "neutral", value: scores.neutral, color: "neutral" },
-    { name: "negative", value: scores.negative, color: "negative" },
+  const bars = [
+    { value: scores.positive, cls: "positive" },
+    { value: scores.neutral, cls: "neutral" },
+    { value: scores.negative, cls: "negative" },
   ];
 
-  sentiments.forEach((sentiment) => {
-    const barItem = document.createElement("div");
-    barItem.className = "bar-item";
+  bars.forEach((item) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "bar-wrapper";
 
-    const label = document.createElement("div");
-    label.className = "bar-label";
-    label.textContent = sentiment.name;
+    const fill = document.createElement("div");
+    fill.className = `bar-fill ${item.cls}`;
+    fill.textContent = `${(item.value * 100).toFixed(1)}%`;
+    fill.style.width = "0%";
 
-    const barWrapper = document.createElement("div");
-    barWrapper.className = "bar-wrapper";
+    wrapper.appendChild(fill);
+    barChart.appendChild(wrapper);
 
-    const barFill = document.createElement("div");
-    barFill.className = `bar-fill ${sentiment.color}`;
-    barFill.textContent = `${(sentiment.value * 100).toFixed(1)}%`;
-
-    // Animate bar width
     setTimeout(() => {
-      barFill.style.width = `${sentiment.value * 100}%`;
+      fill.style.width = `${item.value * 100}%`;
     }, 100);
-
-    barWrapper.appendChild(barFill);
-    barItem.appendChild(label);
-    barItem.appendChild(barWrapper);
-    barChart.appendChild(barItem);
   });
 }
 
-// Display key phrases as tags
+// Key Phrases
 function displayKeyPhrases(phrases) {
   keyphrasesContainer.innerHTML = "";
 
@@ -148,55 +154,45 @@ function displayKeyPhrases(phrases) {
   }
 
   phrases.forEach((phrase, index) => {
-    const tag = document.createElement("div");
+    const tag = document.createElement("span");
     tag.className = "keyphrase-tag";
     tag.textContent = phrase;
-    tag.style.animationDelay = `${index * 0.1}s`;
+    tag.style.animationDelay = `${index * 0.08}s`;
     keyphrasesContainer.appendChild(tag);
   });
 }
 
-// Show error message
-function showError(message) {
-  errorText.textContent = message;
-  errorSection.style.display = "block";
-  resultsSection.style.display = "none";
-  errorSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-// Hide error message
-function hideError() {
-  errorSection.style.display = "none";
-}
-
-// Hide results section
-function hideResults() {
-  resultsSection.style.display = "none";
-}
-
-// Add animation keyframes for key phrases
-const style = document.createElement("style");
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    .keyphrase-tag {
-        animation: slideIn 0.3s ease-out forwards;
-        opacity: 0;
-    }
-`;
-document.head.appendChild(style);
-
-// Auto-resize textarea
+// Auto-resize textarea + character counter
 textInput.addEventListener("input", function () {
+  const length = this.value.length;
+
+  // Auto-resize
   this.style.height = "auto";
   this.style.height = this.scrollHeight + "px";
+
+  // Update counter
+  charCount.textContent = length;
+
+  // Enable / disable button
+  if (length === 0 || length > MAX_CHARS) {
+    analyzeBtn.disabled = true;
+    charCount.parentElement.classList.add("warning");
+  } else {
+    analyzeBtn.disabled = false;
+    charCount.parentElement.classList.remove("warning");
+  }
 });
+
+// Key phrase animation
+const style = document.createElement("style");
+style.textContent = `
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.keyphrase-tag {
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+`;
+document.head.appendChild(style);

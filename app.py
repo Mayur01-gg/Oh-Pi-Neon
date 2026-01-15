@@ -20,7 +20,7 @@ def analyze():
 
     result = analyze_text(text)
 
-    # Ensure JSON-safe structure
+    # ---------------- EXISTING RESPONSE (UNCHANGED) ----------------
     response = {
         "sentiment": result["sentiment"],
         "confidence_scores": {
@@ -30,6 +30,10 @@ def analyze():
         },
         "key_phrases": result.get("key_phrases", [])
     }
+
+    # ---------------- NEW: LANGUAGE INFO (ADDITIVE) ----------------
+    if "language" in result:
+        response["language"] = result["language"]
 
     return jsonify(response)
 

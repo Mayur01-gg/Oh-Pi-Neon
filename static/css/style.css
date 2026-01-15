@@ -305,3 +305,53 @@ body {
         padding: 20px;
     }
 }
+
+/* ===========================
+   LANGUAGE HIGHLIGHT
+=========================== */
+.language-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.language-icon {
+    font-size: 1.8rem;
+}
+
+.language-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: linear-gradient(
+        135deg,
+        rgba(79, 70, 229, 0.12),
+        rgba(79, 70, 229, 0.06)
+    );
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1rem;
+    border: 1px solid rgba(79, 70, 229, 0.25);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+}
+
+.language-badge span {
+    letter-spacing: 0.3px;
+}
+
+/* ===========================
+   Character Counter
+=========================== */
+.char-counter {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.char-counter.warning {
+    color: var(--danger);
+    font-weight: 600;
+}
